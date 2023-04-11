@@ -31,7 +31,7 @@ public class AccountController {
 	}
 
 	/**
-	 * * 新規アカウント作成
+	 * 新規アカウント作成
 	 *
 	 * @param email            メールアドレス
 	 * @param password         パスワード
