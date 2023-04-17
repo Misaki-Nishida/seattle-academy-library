@@ -42,14 +42,14 @@
                                     </c:if> <c:if test="${!empty bookInfo.thumbnail}">
                                         <img class="book_noimg" src="${bookInfo.thumbnail}">
                                     </c:if>
-                                     </a> <input type="hidden" name="bookId" value="${bookInfo.bookId}">
-                             </form>
-                             <ul>
+                                </a> <input type="hidden" name="bookId" value="${bookInfo.bookId}">
+                            </form>
+                            <ul>
                                  <li class="book_title">${bookInfo.title}</li>
                                  <li class="book_author">${bookInfo.author}(著)</li>
                                  <li class="book_publisher">出版社：${bookInfo.publisher}</li>
                                  <li class="book_publish_date">出版日：${bookInfo.publishDate}</li>
-                             </ul>
+                            </ul>
                         </div>
                     </c:forEach>
                 </div>
