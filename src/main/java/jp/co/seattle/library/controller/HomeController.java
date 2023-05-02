@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import jp.co.seattle.library.dto.BookInfo;
 import jp.co.seattle.library.service.BooksService;
@@ -33,10 +34,29 @@ public class HomeController {
 	public String transitionHome(Model model) {
 		//書籍の一覧情報を取得（タスク３）
 
-
 		List<BookInfo> getedBookList = booksService.getBookList();
- 		model.addAttribute("bookList",getedBookList);
+		model.addAttribute("bookList", getedBookList);
+		if (getedBookList.isEmpty()) {
+			String errormessage = "書籍データが0件です";
+			model.addAttribute("resultMessage", errormessage);
+		}
 		return "home";
 
-}
+	}
+
+	@RequestMapping(value = "/search", method = RequestMethod.GET)
+	public String searchbooks(@RequestParam("search") String searching, Model model) {
+
+		//検索情報の取得
+
+		List<BookInfo> searchedBookList = booksService.searchbookList(searching);
+		if (searchedBookList.isEmpty()) {
+			String errormessage = "書籍データが0件です";
+			model.addAttribute("resultMessage", errormessage);
+		} else {
+			model.addAttribute("bookList", searchedBookList);
+		}
+
+		return "home";
+	}
 }

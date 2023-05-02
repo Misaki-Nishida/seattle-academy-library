@@ -102,4 +102,19 @@ public class BooksService {
 					bookInfo.getIsbn(), bookInfo.getDescription(), bookInfo.getBookId());
 		}
 	}
+
+	/**
+	 * 書籍リストを取得する
+	 *
+	 * @return 書籍リスト
+	 */
+	public List<BookInfo> searchbookList(String searching) {
+
+		// TODO 検索情報を取得
+		List<BookInfo> getedBookList = jdbcTemplate.query(
+				"SELECT * FROM books WHERE title like concat ('%',?,'%' ) ORDER BY title ASC;",
+				new BookInfoRowMapper(),searching);
+
+		return getedBookList;
+	}
 }
