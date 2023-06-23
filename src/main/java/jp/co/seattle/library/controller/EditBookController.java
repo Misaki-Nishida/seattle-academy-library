@@ -49,6 +49,8 @@ public class EditBookController {
 	 * @param isbn        ISBN
 	 * @param description 説明文
 	 * @param model       モデル
+	 * @param tag         タグ
+	 * @param revue       レビュー
 	 * @return 遷移先画面
 	 */
 	@Transactional
@@ -56,7 +58,7 @@ public class EditBookController {
 	public String updateBook(Locale locale, @RequestParam("bookId") int bookId, @RequestParam("title") String title,
 			@RequestParam("author") String author, @RequestParam("publisher") String publisher,
 			@RequestParam("publishDate") String publishDate, @RequestParam("isbn") String isbn,
-			@RequestParam("description") String description, @RequestParam("thumbnail") MultipartFile file,
+			@RequestParam("description") String description, @RequestParam(name="tag") String tag, @RequestParam("revue") String revue, @RequestParam("rate") String star, @RequestParam("thumbnail") MultipartFile file,
 			Model model) {
 		logger.info("Welcome updateBook! The client locale is {}.", locale);
 
@@ -69,6 +71,9 @@ public class EditBookController {
 		bookInfo.setPublishDate(publishDate);
 		bookInfo.setIsbn(isbn);
 		bookInfo.setDescription(description);
+		bookInfo.setTag(tag);
+		bookInfo.setRevue(revue);
+		bookInfo.setStar(star);
 
 		List<String> errorList = bookUtil.checkBookInfo(bookInfo);
 		// errorListに一つでもエラーメッセージが入っていたら登録しない
