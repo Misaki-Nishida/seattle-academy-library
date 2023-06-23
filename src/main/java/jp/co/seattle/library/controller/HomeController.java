@@ -24,6 +24,8 @@ public class HomeController {
 	@Autowired
 	private BooksService booksService;
 
+	private String tagserching;
+
 	/**
 	 * Homeボタンからホーム画面に戻るページ
 	 * 
@@ -58,5 +60,77 @@ public class HomeController {
 		}
 
 		return "home";
+	}
+
+	//お気に入り登録情報の取得
+	@RequestMapping(value = "/fav", method = RequestMethod.GET)
+	public String favorite(@RequestParam("bookId") int bookId, Model model) {
+		booksService.getFavorite(bookId);
+		return "redirect:/home";
+	}
+
+	@RequestMapping(value = "/notfav", method = RequestMethod.GET)
+	public String notfavorite(@RequestParam("bookId") int bookId, Model model) {
+		booksService.getnotFavorite(bookId);
+		return "redirect:/home";
+
+	}
+
+	//
+	@RequestMapping(value = "tag", method = RequestMethod.GET)
+	public String tag(@RequestParam("bookId") int bookId, Model model) {
+		booksService.getFavorite(bookId);
+		return "redirect:/home";
+	}
+
+	@RequestMapping(value = "/tagsearch", method = RequestMethod.GET)
+	public String tagsearchbooks(@RequestParam("tagsearch") String tagsearching, Model model) {
+
+		//タグ検索情報の取得
+		List<BookInfo> tagsearchedBookList = booksService.tagsearchBookList(tagsearching);
+		{
+			if (tagsearchedBookList.isEmpty()) {
+				String errormessage = "書籍データが0件です";
+
+				model.addAttribute("resultMessage", errormessage);
+			} else {
+
+				model.addAttribute("bookList", tagsearchedBookList);
+			}
+
+			return "home";
+		}
+	}
+
+	@RequestMapping(value = "/search_order", method = RequestMethod.GET)
+	public String search_orderbooks(@RequestParam("search_order") String searchordered, Model model) {
+
+		//書籍表示順バリエーションタグ検索情報の取得
+		if (searchordered.equals("orderASC")) {
+			List<BookInfo> selectedBookInfo = booksService.orderBookListASC();
+			model.addAttribute("bookList", selectedBookInfo);
+		}
+		if (searchordered.equals("orderDESC")) {
+			List<BookInfo> selectedBookInfo = booksService.orderBookListDESC();
+			model.addAttribute("bookList", selectedBookInfo);
+		}
+		if (searchordered.equals("book_author")) {
+			List<BookInfo> selectedBookInfo = booksService.authorBookList();
+			model.addAttribute("bookList", selectedBookInfo);
+		}
+		if (searchordered.equals("book_publish_date")) {
+			List<BookInfo> selectedBookInfo = booksService.publish_DateBookList();
+			model.addAttribute("bookList", selectedBookInfo);
+		}
+		return "home";
+	}
+
+	//貸し出し機能情報の取得
+
+	@RequestMapping(value = "/stock", method = RequestMethod.POST)
+	public String library(@RequestParam("bookId") int bookId, @RequestParam("value") String value, Model model) {
+		booksService.getLibrary(value, bookId);
+		return "redirect:/home";
+
 	}
 }

@@ -29,5 +29,17 @@ public class BookDetailsInfo {
 	private String isbn;
 
 	private String description;
+	
+	private String favorite;
+	
+	private String tag;
+	
+	private String library;
 
-}
+	private String revue;
+	
+	private String star;
+		// TODO 自動生成されたメソッド・スタブ
+		
+	}
+
