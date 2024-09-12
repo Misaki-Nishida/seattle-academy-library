@@ -33,7 +33,7 @@ public class BooksService {
 
 		// TODO 書籍名の昇順で書籍情報を取得するようにSQLを修正（タスク３）
 		List<BookInfo> getedBookList = jdbcTemplate.query(
-				"",
+				"SELECT id, title, author, publisher, publish_date, thumbnail_url, favorite, tag, library, revue, star FROM books ORDER BY title ASC;",
 				new BookInfoRowMapper());
 
 		return getedBookList;
@@ -46,7 +46,7 @@ public class BooksService {
 	 * @return 書籍情報
 	 */
 	public BookDetailsInfo getBookInfo(int bookId) {
-		String sql = "SELECT id, title, author, publisher, publish_date, isbn, description, thumbnail_url, thumbnail_name FROM books WHERE books.id = ? ORDER BY title ASC;";
+		String sql = "SELECT id, title, author, publisher, publish_date, isbn, description, thumbnail_url, thumbnail_name, favorite, tag, library, revue, star FROM books WHERE books.id = ? ORDER BY title ASC;";
 
 		BookDetailsInfo bookDetailsInfo = jdbcTemplate.queryForObject(sql, new BookDetailsInfoRowMapper(), bookId);
 
@@ -61,11 +61,11 @@ public class BooksService {
 	 */
 	public int registBook(BookDetailsInfo bookInfo) {
 		// TODO 取得した書籍情報を登録し、その書籍IDを返却するようにSQLを修正（タスク４）
-		String sql = "";
+		String sql = "Insert into books (title, author, publisher, publish_date, thumbnail_name, thumbnail_url, isbn, description, tag, revue, star, reg_date, upd_date) values (?,?,?,?,?,?,?,?,?,?,?,now(),now()) RETURNING id";
 
 		int bookId = jdbcTemplate.queryForObject(sql, int.class, bookInfo.getTitle(), bookInfo.getAuthor(),
 				bookInfo.getPublisher(), bookInfo.getPublishDate(), bookInfo.getThumbnailName(),
-				bookInfo.getThumbnailUrl(), bookInfo.getIsbn(), bookInfo.getDescription());
+				bookInfo.getThumbnailUrl(), bookInfo.getIsbn(), bookInfo.getDescription(), bookInfo.getTag(), bookInfo.getRevue(), bookInfo.getStar());
 		return bookId;
 	}
 
@@ -76,7 +76,7 @@ public class BooksService {
 	 */
 	public void deleteBook(int bookId) {
 		// TODO 対象の書籍を削除するようにSQLを修正（タスク6）
-		String sql = "";
+		String sql = "DELETE FROM books WHERE id = ?;";
 		jdbcTemplate.update(sql, bookId);
 	}
 
@@ -89,15 +89,144 @@ public class BooksService {
 		String sql;
 		if (bookInfo.getThumbnailUrl() == null) {
 			// TODO 取得した書籍情報を更新するようにSQLを修正（タスク５）
-			sql = "";
+			sql = "UPDATE books SET title = ?, author = ?, publisher = ?, publish_date = ?, isbn = ?, description = ?, tag = ?, revue = ?, star = ?, upd_date = now() WHERE id = ?;";
 			jdbcTemplate.update(sql, bookInfo.getTitle(), bookInfo.getAuthor(), bookInfo.getPublisher(),
-					bookInfo.getPublishDate(), bookInfo.getIsbn(), bookInfo.getDescription(), bookInfo.getBookId());
+					bookInfo.getPublishDate(), bookInfo.getIsbn(), bookInfo.getDescription(), bookInfo.getTag(), bookInfo.getRevue(), bookInfo.getStar(),
+					bookInfo.getBookId());
 		} else {
 			// TODO 取得した書籍情報を更新するようにSQLを修正（タスク５）
-			sql = "";
+			sql = "UPDATE books SET title = ?, author = ?, publisher = ?, publish_date = ?, thumbnail_name = ?, thumbnail_url = ?, isbn = ?, description = ?, tag = ?, revue = ?, star = ?, upd_date = now() WHERE id = ?;";
 			jdbcTemplate.update(sql, bookInfo.getTitle(), bookInfo.getAuthor(), bookInfo.getPublisher(),
 					bookInfo.getPublishDate(), bookInfo.getThumbnailName(), bookInfo.getThumbnailUrl(),
-					bookInfo.getIsbn(), bookInfo.getDescription(), bookInfo.getBookId());
+					bookInfo.getIsbn(), bookInfo.getDescription(), bookInfo.getTag(), bookInfo.getRevue(), bookInfo.getStar(), bookInfo.getBookId());
 		}
 	}
+
+	/**
+	 * 書籍リストを取得する
+	 *
+	 * @return 書籍リスト
+	 */
+	public List<BookInfo> searchbookList(String searching) {
+
+		// TODO 検索情報を取得
+		List<BookInfo> getedBookList = jdbcTemplate.query(
+				"SELECT * FROM books WHERE title like concat ('%',?,'%' ) ORDER BY title ASC;",
+				new BookInfoRowMapper(), searching);
+
+		return getedBookList;
+	}
+
+	public void getFavorite(int bookId) {
+		String sql = "UPDATE books SET favorite='like' WHERE id = ?;";
+
+		jdbcTemplate.update(sql, bookId);
+
+	}
+
+	public void getnotFavorite(int bookId) {
+		String sql = "UPDATE books SET favorite='unlike' WHERE id = ?;";
+
+		jdbcTemplate.update(sql, bookId);
+
+	}
+
+	/**
+	 * お気に入り登録リストを取得する
+	 * 
+	 * @param bookInfo
+	 */
+	public List<BookInfo> favoritebooks() {
+		List<BookInfo> getedBookList = jdbcTemplate.query(
+				"SELECT * FROM books WHERE favorite = 'like' ORDER BY title ASC;",
+				new BookInfoRowMapper());
+		return getedBookList;
+	}
+
+	//タグ検索リストを取得する
+	public List<BookInfo> tagsearchBookList(String tagsearching) {
+
+		List<BookInfo> getedBookList = jdbcTemplate.query(
+				"SELECT * FROM books WHERE tag = ? ORDER BY title ASC;",
+				new BookInfoRowMapper(), tagsearching);
+
+		return getedBookList;
+	}
+
+	//昇順
+	public List<BookInfo> orderBookListASC() {
+
+		// TODO 昇順情報を取得
+		List<BookInfo> getedBookList = jdbcTemplate.query(
+				"SELECT * FROM books ORDER BY title ASC;",
+				new BookInfoRowMapper());
+
+		return getedBookList;
+	}
+
+	//降順
+	public List<BookInfo> orderBookListDESC() {
+
+		// TODO 降順情報を取得
+		List<BookInfo> getedBookList = jdbcTemplate.query(
+				"SELECT * FROM books ORDER BY title DESC;",
+				new BookInfoRowMapper());
+
+		return getedBookList;
+	}
+
+	//著者名
+	public List<BookInfo> authorBookList() {
+
+		// TODO 著者名情報を取得
+		List<BookInfo> getedBookList = jdbcTemplate.query(
+				"SELECT * FROM books ORDER BY author;",
+				new BookInfoRowMapper());
+
+		return getedBookList;
+	}
+
+	//出版日
+	public List<BookInfo> publish_DateBookList() {
+
+		// TODO 出版日情報を取得
+		List<BookInfo> getedBookList = jdbcTemplate.query(
+				"SELECT * FROM books ORDER BY publish_date;",
+				new BookInfoRowMapper());
+
+		return getedBookList;
+	}
+
+	//書籍の貸し出し
+	public void getLibrary(String value, int bookId) {
+		String sql = "UPDATE books SET library=? WHERE id = ?;";
+
+		jdbcTemplate.update(sql, value, bookId);
+
+	}
+
+	/**
+	 * 貸し出し機能リストを取得する
+	 * 
+	 * @param bookInfo
+	 */
+	public List<BookInfo> librarybooks() {
+		List<BookInfo> getedBookList = jdbcTemplate.query(
+				"SELECT * FROM books WHERE library = 'stock' ORDER BY title ASC;",
+				new BookInfoRowMapper());
+		return getedBookList;
+	}
 }
+
+/**
+* タグリストを取得する
+ * 
+ * @param bookInfo
+ 
+ public List<BookInfo> tagbooks() {
+		List<BookInfo> getedBookList = jdbcTemplate.query(
+				"SELECT * FROM books WHERE tag = '?' ORDER BY title ASC;",
+		new BookInfoRowMapper());
+		return getedBookList; 
+		}
+*/

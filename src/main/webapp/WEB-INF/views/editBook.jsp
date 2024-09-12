@@ -29,7 +29,7 @@
         </div>
     </header>
     <main>
-        <form action="<%=request.getContextPath()%>/" method="post" enctype="multipart/form-data" id="data_upload_form">
+        <form action="<%=request.getContextPath()%>/updateBook" method="post" enctype="multipart/form-data" id="data_upload_form">
             <h1>書籍の編集</h1>
             <div class="content_body add_book_content">
                 <div>
@@ -53,33 +53,84 @@
                                 </c:forEach>
                             </div>
                         </c:if>
-                        <span>書籍名</span><span class="care care2">必須</span>
+                        <span>書籍名</span><span class="care care2">必須</span> <input type="text" name="title" value="${bookInfo.title}">
                     </div>
                     <div>
-                        <span>著者名</span><span class="care care2">必須</span>
+                        <span>著者名</span><span class="care care2">必須</span> <input type="text" name="author" value="${bookInfo.author}">
                     </div>
                     <div>
-                        <span>出版社</span><span class="care care2">必須</span>
+                        <span>出版社</span><span class="care care2">必須</span> <input type="text" name="publisher" value="${bookInfo.publisher}">
                     </div>
                     <div>
-                        <span>出版日</span><span class="care care2">必須</span>
+                        <span>出版日</span><span class="care care2">必須</span> <input type="text" name="publishDate" value="${bookInfo.publishDate}">
                     </div>
                     <div>
-                        <span>ISBN</span><span class="care care1">任意</span>
+                        <span>ISBN</span><span class="care care1">任意</span> <input type="text" name="isbn" value="${bookInfo.isbn}">
                     </div>
                     <div>
-                        <span>説明文</span><span class="care care1">任意</span>
+                        <span>説明文</span><span class="care care1">任意</span> <input type="text" name="description" value="${bookInfo.description}">
                     </div>
-                    <input type="hidden" id="bookId" name="bookId" value="${bookInfo.bookId}">
+                    <div>
+                        <span> ジャンル</span><span class="care care1">任意</span><select name="tag" value="${bookInfo.tag}">
+                            <option value="ーー">ーー</option>
+                            <option value="漫画">漫画</option>
+                            <option value="小説">小説</option>
+                            <option value="雑誌">雑誌</option>
+                            <option value="辞典">辞典</option>
+                            <option value="絵本">絵本</option>
+                        </select> <input type="hidden" id="bookId" name="bookId" value="${bookInfo.bookId}">
+                    </div>
+                    <div>
+                        <span>レビュー</span><span class="care care1">任意</span> <input type="text" name="revue" value="${bookInfo.revue}">
+                    </div>
+                    <div>
+                        <span>評価</span><span class="care care1">任意</span>
+                        <div class="rate-form">
+                            <input id="star5" type="radio" name="rate" value="★★★★★"> <label for="star5">★</label> <input id="star4" type="radio" name="rate" value="★★★★"> <label for="star4">★</label> <input id="star3" type="radio" name="rate" value="★★★"> <label for="star3">★</label> <input id="star2" type="radio" name="rate" value="★★"> <label for="star2">★</label> <input id="star1" type="radio" name="rate" value="★"> <label for="star1">★</label> <input
+                                id="star0" type="radio" name="rate" value=""> <label for="star0"></label>
+                        </div>
+                        <script>
+																									document
+																											.addEventListener(
+																													"DOMContentLoaded",
+																													function() {
+																														// ページが読み込まれた時に実行される処理
+
+																														var rate = "${bookInfo.star}"; // サーバーサイドで取得した評価情報
+
+																														// 評価情報に基づいて星ボタンを操作
+																														if (rate === "★★★★★") {
+																															document
+																																	.getElementById("star5").checked = true;
+																														} else if (rate === "★★★★") {
+																															document
+																																	.getElementById("star4").checked = true;
+																														} else if (rate === "★★★") {
+																															document
+																																	.getElementById("star3").checked = true;
+																														} else if (rate === "★★") {
+																															document
+																																	.getElementById("star2").checked = true;
+																														} else if (rate === "★") {
+																															document
+																																	.getElementById("star1").checked = true;
+																														} else if (rate === "") {
+																															document
+																																	.getElementById("star0").checked = true;
+																														}
+																													});
+																								</script>
+                    </div>
                 </div>
             </div>
             <div class="bookBtn_box">
-                <button type="submit" id="add-btn" class="btn_updateBook">更新</button>    
+                <button type="submit" id="add-btn" class="btn_updateBook">更新</button>
         </form>
-        		<form method="post" action="deleteBook" name="delete">
-
- 				</form>
- 			</div>      
+        <form method="post" action="deleteBook" name="delete">
+            <input type="hidden" id="bookId" name="bookId" value="${bookInfo.bookId}">
+            <button type="submit" id="add-btn" class="btn_deleteBook">削除</button>
+        </form>
+        </div>
     </main>
 </body>
 </html>

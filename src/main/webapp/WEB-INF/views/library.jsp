@@ -12,54 +12,6 @@
 <link href="<c:url value="/resources/css/home.css" />" rel="stylesheet" type="text/css">
 </head>
 <body class="wrapper">
-    <script>
-    
-             function modal(revue){ 
-                   console.log(revue);
-                   const splitArr = revue.split(',');
-                  
-                  const modal = document.querySelector('.js-modal');
-                  const modalButton = document.querySelector('.js-modal-button');
-                  const modalClose = document.querySelector('.js-close-button');
-                  
-                  var modalTitle = document.getElementById('modal__content');
-                  modalTitle.innerHTML = revue;
-                  
-                    modal.classList.add('is-open');
-                  
-
-
-                  modalClose.addEventListener('click', () => {
-                    modal.classList.remove('is-open');
-               
-
-                  });
-                 }
-   
-                 </script>
-    <!-- <script>
-    
-             function modal(star){ 
-                   console.log(star);
-                  const modal = document.querySelector('.js-modal');
-                  const modalButton = document.querySelector('.js-modal-button');
-                  const modalClose = document.querySelector('.js-close-button');
-                  
-                  var modalTitle = document.getElementById('modal__content');
-                  modalTitle.innerHTML = star;
-                  
-                    modal.classList.add('is-open');
-                  
-
-
-                  modalClose.addEventListener('click', () => {
-                    modal.classList.remove('is-open');
-               
-
-                  });
-                 }
-   
-                 </script> -->
     <header>
         <div class="left">
             <img class="mark" src="resources/img/logo.png" />
@@ -117,7 +69,7 @@
         </form>
         </div>
         <div class="ran">
-            <a href="<%=request.getContextPath()%>/addBook" class="btn_add_book">書籍の追加</a> <a href="<%=request.getContextPath()%>/favorite" class="btn_fav_book">お気に入り</a> <a href="<%=request.getContextPath()%>/library" class="btn_fav_book">所蔵図書</a>
+            <a href="<%=request.getContextPath()%>/addBook" class="btn_add_book">書籍の追加</a> <a href="<%=request.getContextPath()%>/favorite" class="btn_fav_book">お気に入り</a> <a href="<%=request.getContextPath()%>/library" class="btn_lib_book">所蔵図書</a>
         </div>
         <div class="content_body">
             <c:if test="${!empty resultMessage}">
@@ -141,59 +93,67 @@
                                 <li class="book_publisher">出版社：${bookInfo.publisher}</li>
                                 <li class="book_publish_date">出版日：${bookInfo.publishDate}</li>
                                 <li class="book_tag">ジャンル：${bookInfo.tag}</li>
-                            </ul>
-                            <c:if test="${!(bookInfo.favorite.equals('like'))}">
-                                <form method="get" action="fav" name="favorite">
-                                    <p align="justify">
-                                        <button class="button-049">♡</button>
-                                        <input type="hidden" name="bookId" value="${bookInfo.bookId}">
-                                    </p>
-                                </form>
-                            </c:if>
-                            <c:if test="${bookInfo.favorite == 'like'}">
-                                <form method="get" action="notfav" name="nofavorite">
-                                    <p align="justify">
-                                        <button class="button-049">お気に入り登録済み</button>
-                                        <input type="hidden" name="bookId" value="${bookInfo.bookId}">
-                                    </p>
-                                </form>
-                            </c:if>
-                            <c:if test="${bookInfo.library != 'lend'}">
-                                <p>
-                                    <input type="radio" name="site${bookInfo.bookId}" value="stock" onchange="radio_func(this.value,${bookInfo.bookId})" checked>在庫あり <input type="radio" name="site${bookInfo.bookId}" value="lend" onchange="radio_func(this.value,${bookInfo.bookId})">貸し出し中
-                                </p>
-                            </c:if>
-                            <c:if test="${bookInfo.library == 'lend'}">
-                                <p>
-                                    <input type="radio" name="site${bookInfo.bookId}" value="stock" onchange="radio_func(this.value,${bookInfo.bookId})">在庫あり <input type="radio" name="site${bookInfo.bookId}" value="lend" onchange="radio_func(this.value,${bookInfo.bookId})" checked>貸し出し中
-                                </p>
-                            </c:if>
-                            <script>
+                                <div>
+                                    <c:if test="${!(bookInfo.favorite.equals('like'))}">
+                                        <form method="get" action="fav" name="favorite">
+                                            <p align="justify">
+                                                <button class="button-049">♡</button>
+                                                <input type="hidden" name="bookId" value="${bookInfo.bookId}">
+                                            </p>
+                                        </form>
+                                    </c:if>
+                                    <c:if test="${bookInfo.favorite == 'like'}">
+                                        <form method="get" action="notfav" name="nofavorite">
+                                            <p align="justify">
+                                                <button class="button-049">お気に入り登録済み</button>
+                                                <input type="hidden" name="bookId" value="${bookInfo.bookId}">
+                                            </p>
+                                        </form>
+                                    </c:if>
+                                    <%--  <c:if test="${!(bookInfo.favorite.equals('lending'))}">
+                                        <form method="get" action="fav" name="lending">
+                                            <p align="justify">
+                                                <button class="button-049">♡</button>
+                                                <input type="hidden" name="bookId" value="${bookInfo.bookId}">
+                                            </p>
+                                        </form>
+                                    </c:if>
+                                    <c:if test="${bookInfo.favorite == 'lending'}">
+                                        <form method="get" action="notfav" name="nofavorite">
+                                            <p align="justify">
+                                                <button class="button-049">お気に入り登録済み</button>
+                                                <input type="hidden" name="bookId" value="${bookInfo.bookId}">
+                                            </p>
+                                            </form>
+                                    </c:if> --%>
+                                    <c:if test="${bookInfo.library != 'lend'}">
+                                        <p>
+                                            <input type="radio" name="site${bookInfo.bookId}" value="stock" onchange="radio_func(this.value,${bookInfo.bookId})" checked>在庫あり <input type="radio" name="site${bookInfo.bookId}" value="lend" onchange="radio_func(this.value,${bookInfo.bookId})">貸し出し中
+                                        </p>
+                                    </c:if>
+                                    <c:if test="${bookInfo.library == 'lend'}">
+                                        <p>
+                                            <input type="radio" name="site${bookInfo.bookId}" value="stock" onchange="radio_func(this.value,${bookInfo.bookId})">在庫あり <input type="radio" name="site${bookInfo.bookId}" value="lend" onchange="radio_func(this.value,${bookInfo.bookId})" checked>貸し出し中
+                                        </p>
+                                    </c:if>
+                                    <script>
                                 function radio_func(check,id) {
                                     var library = new XMLHttpRequest();
                                       library.open('POST',"http://localhost:8080/SeattleLibrary/stock?value="+check+"&bookId="+id+"");
                                        library.send();
                                }
                                 </script>
-                            <button class="button js-modal-button" id="app" value="${bookInfo.revue},${bookInfo.star}" onclick="modal(this.value)">レビュー評価</button>
+                                </div>
+                                <%-- <form method="get" class="btn" action="favorite">
+                                    <input type="hidden" name="bookId" value="${bookInfo.bookId}">
+                                    <button type="submit" class="btn">💟</button>
+                                </form> --%>
+                            </ul>
                         </div>
                     </c:forEach>
-                    <div class="layer js-modal">
-                        <div class="modal">
-                            <div class="modal__inner">
-                                <div class="modal__button-wrap">
-                                    <button class="close-button js-close-button">
-                                        <span></span> <span></span>
-                                    </button>
-                                </div>
-                                <div class="modal__contents">
-                                    <div class="modal__content" id="modal__content"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
+        </div>
     </main>
 </body>
 </html>
